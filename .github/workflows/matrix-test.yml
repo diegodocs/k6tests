@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  SCALE_SET_NAME: aks-runner-micro
-  NUMBER_OF_JOBS: 10
+  SCALE_SET_NAME: ubuntu-latest
+  NUMBER_OF_JOBS: 1
   SLEEP_SECONDS: 5
   TEST_ID: ''
   DISPATCH_TIME: ''
@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         numbers: ${{fromJson(needs.fill-matrix.outputs.matrix)}}
-        runners: [ubuntu-latest]
+        runners: [$SCALE_SET_NAME]
     runs-on: ${{ matrix.runners }}
     steps:     
     - name: Checkout repository
@@ -54,3 +54,12 @@ jobs:
         echo "TEST_ID: $TEST_ID"
         echo "DISPATCH_TIME: $DISPATCH_TIME"
         echo "INDEX: ${{matrix.numbers}}"
+
+    - name: Create Pull Request        
+      uses: peter-evans/create-pull-request@v7
+      with:        
+        branch: feature/test-1
+        draft: true
+        title: '[Test] Update report'
+
+    
