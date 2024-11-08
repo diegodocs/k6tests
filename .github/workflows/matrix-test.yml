@@ -22,7 +22,7 @@ jobs:
         id: fill-matrix
         run: |
           numbers="["
-          for i in {1..${{ env.amount }}}
+          for i in {1..${{ env.NUMBER_OF_JOBS }}}
           do
             numbers="$numbers\"$i\","
           done
@@ -52,3 +52,4 @@ jobs:
         echo "SLEEP_SECONDS: $SLEEP_SECONDS"
         echo "TEST_ID: $TEST_ID"
         echo "DISPATCH_TIME: $DISPATCH_TIME"
+        echo "DISPATCH_TIME: $matrix.index"
