@@ -1,0 +1,54 @@
+name: Matrix Event
+
+on:
+  pull_request:
+    types: [opened, reopened]
+  workflow_dispatch:
+
+env:
+  SCALE_SET_NAME: aks-runner-micro
+  NUMBER_OF_JOBS: 10
+  SLEEP_SECONDS: 5
+  TEST_ID: ${{ github.event.inputs.TEST_ID || 'guid' }}
+  DISPATCH_TIME: ''
+
+jobs:
+  fill-matrix:
+    outputs:
+      matrix: ${{ steps.fill-matrix.outputs.matrix }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fill matrix
+        id: fill-matrix
+        run: |
+          numbers="["
+          for i in {1..${{ env.amount }}}
+          do
+            numbers="$numbers\"$i\","
+          done
+          numbers="${numbers::-1}]"
+          echo "matrix=$numbers" >> "$GITHUB_OUTPUT"
+        shell: bash
+ 
+  run-matrix:
+    needs: fill-matrix
+    strategy:
+      matrix:
+        numbers: ${{fromJson(needs.fill-matrix.outputs.matrix)}}
+        runners: [ubuntu-latest]
+    runs-on: ${{ matrix.runners }}
+    steps:     
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Fill DISPATCH_TIME variable with current timestamp
+      run: |
+        echo "DISPATCH_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
+    - name: Print all variables values
+      run: |
+        echo "SCALE_SET_NAME: $SCALE_SET_NAME"
+        echo "NUMBER_OF_JOBS: $NUMBER_OF_JOBS"
+        echo "SLEEP_SECONDS: $SLEEP_SECONDS"
+        echo "TEST_ID: $TEST_ID"
+        echo "DISPATCH_TIME: $DISPATCH_TIME"
