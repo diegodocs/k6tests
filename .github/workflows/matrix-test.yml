@@ -61,5 +61,6 @@ jobs:
         branch: feature/test-1
         draft: true
         title: '[Test] Update report'
+        base: main
 
     
