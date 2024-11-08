@@ -44,7 +44,7 @@ jobs:
     - name: Fill DISPATCH_TIME variable with current timestamp
       run: |
         echo "DISPATCH_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
-        echo "TEST_ID=uuidgen" >> >> $GITHUB_ENV
+        echo "TEST_ID=uuidgen" >> $GITHUB_ENV
 
     - name: Print all variables values
       run: |
