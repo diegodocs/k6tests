@@ -39,7 +39,7 @@ jobs:
     runs-on: ${{ matrix.runners }}
     steps:     
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Fill DISPATCH_TIME variable with current timestamp
       run: |
@@ -55,12 +55,11 @@ jobs:
         echo "DISPATCH_TIME: $DISPATCH_TIME"
         echo "INDEX: ${{matrix.numbers}}"
 
+    - name: gh cli setup
+      uses: ksivamuthu/actions-setup-gh-cli@v3
+
     - name: Create Pull Request        
-      uses: peter-evans/create-pull-request@v7
-      with:        
-        branch: feature/test-1
-        draft: true
-        title: '[Test] Update report'
-        base: main
+      run: |
+        gh pr create --title "[Test] All code issues fixed" --body "All code issues fixed" --base main --head feature/test-1
 
     
