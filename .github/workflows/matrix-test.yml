@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         numbers: ${{fromJson(needs.fill-matrix.outputs.matrix)}}
-        runners: ${{ env.SCALE_SET_NAME }}
+        runners: [ubuntu-latest]
     runs-on: ${{ matrix.runners }}
     steps:     
     - name: Checkout repository
